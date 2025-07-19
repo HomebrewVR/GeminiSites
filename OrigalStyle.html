@@ -24,6 +24,7 @@
         .active-nav { background-color: #000000; color: #ffffff; }
         .active-nav i { color: #ffffff !important; }
         .toast { transition: opacity 0.3s, transform 0.3s; }
+        .trouser-modal { transition: transform 0.3s ease-in-out; }
     </style>
 </head>
 <body class="text-gray-800 overflow-hidden h-screen">
@@ -43,8 +44,8 @@
                 </ul>
             </nav>
             <div class="mt-auto flex-shrink-0 pt-6">
-                 <button id="add-new-item-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center">
-                    <i class="fas fa-plus mr-2"></i> Add New Item
+                 <button id="add-my-photos-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center">
+                    <i class="fas fa-plus mr-2"></i> <span id="add-photos-btn-text">Add My Photos</span>
                 </button>
             </div>
         </aside>
@@ -74,7 +75,7 @@
                 </div>
                 <div id="explore-filters" class="flex flex-wrap gap-3 mb-8"></div>
                 <div id="explore-grid" class="masonry-grid"></div>
-                <div id="explore-loader" class="text-center py-10 hidden"><i class="fas fa-spinner fa-spin text-4xl text-blue-600"></i></div>
+                <div id="explore-loader" class="text-center py-10"><i class="fas fa-spinner fa-spin text-4xl text-blue-600"></i></div>
             </div>
 
             <div id="collection-view" class="flex-1 overflow-y-auto p-8 hidden">
@@ -136,6 +137,26 @@
             </div>
         </div>
     </div>
+    
+    <div id="add-url-modal-container" class="fixed inset-0 bg-black bg-opacity-40 z-50 hidden items-end justify-center">
+        <div id="add-url-modal" class="trouser-modal bg-white rounded-t-2xl shadow-2xl w-full max-w-4xl h-[80vh] flex flex-col transform translate-y-full">
+            <div class="p-6 border-b border-gray-200 flex-shrink-0">
+                 <h3 class="text-2xl font-bold text-gray-900">Add Photos from Facebook</h3>
+                 <p class="text-gray-500">Find a photo on Facebook, right-click it, select "Copy Image Address", and paste the link below.</p>
+            </div>
+            <div class="flex-grow p-6 bg-gray-50 flex items-center justify-center text-gray-400">
+                <div class="text-center">
+                    <i class="fab fa-facebook text-8xl mb-4"></i>
+                    <p class="font-semibold">Simulated Facebook Webview</p>
+                </div>
+            </div>
+            <div class="bg-white p-6 border-t border-gray-200 flex-shrink-0 flex items-center gap-4">
+                <input type="text" id="photo-url-input" placeholder="Paste one or more image URLs here (separated by a space or new line)" class="flex-grow px-4 py-3 bg-gray-100 border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button id="add-url-btn" class="px-6 py-3 bg-blue-600 border border-transparent rounded-md shadow-sm text-sm font-semibold text-white hover:bg-blue-700 transition-colors">Upload</button>
+                 <button id="add-url-cancel-btn" class="px-5 py-3 bg-white border border-gray-300 rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors">Close</button>
+            </div>
+        </div>
+    </div>
 
     <div id="toast-container" class="fixed bottom-5 right-5 z-50"></div>
 
@@ -146,6 +167,7 @@
             currentView: 'explore',
             currentCategory: 'Fashion',
             activeExploreFilter: 'all',
+            myPhotosAdded: false,
         },
         data: {
             collections: {
@@ -163,166 +185,33 @@
                 { name: 'New Maximalism', query: 'maximalism' },
                 { name: 'Interior Design', query: 'interior' },
             ],
-            imageUrls: [
-                'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1581044777550-4cfa6ce670c0?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1499952127939-9bbf5af6c51c?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1550928432-4a94a2d4a79c?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1620799140408-edc6d5f9650d?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1578681994506-b8f463449011?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1528999953468-2facdc52a49d?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1612213422678-7a544616b7da?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1509319117193-57bab727e09d?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1516762689617-e1cff2b4b94f?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1554412933-514a83d2f3c8?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1617038260897-41a1f1b272ec?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1603217969163-12b60de554ac?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1564584217132-2271feaeb3c5?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1572804013427-4d7ca7268211?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1584473456399-0a6c2a85703a?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1551803091-e25622d22262?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1588117265224-234d38a7b3bf?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1618221195720-dd6b41fa3a34?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1567016432779-094069958ea5?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1598928636135-d146006ff4be?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1540998145393-8c1308c8d0d9?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1574169208507-84376144848b?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1579611399868-3563b1246d5f?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1592078615290-033ee584e267?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1532386236358-a33d8a9434e3?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1593011387226-56163893b12d?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1580480055273-228ff53a2283?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1562215370-91450b863584?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1571086382535-23c399a955a8?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1540574163024-5735f6153dd4?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1521577352947-f1427ee9ee21?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1576091160550-42b09a7d1b37?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1542291026-7eec264c27ab?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1525966222134-fc3011011d32?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1562183241-b937e95585b6?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1577909673855-945695a2095b?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1543087904-7435a0b44454?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1603575395337-01c00a11404a?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1533853154859-3451b6847572?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1536520002442-6978a48ed634?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1513094735237-8f2714d57c13?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1588117265224-234d38a7b3bf?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1615873968403-89e068629265?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1537726235470-8504e3b77c06?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1554995207-c18c203602cb?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1583847268964-b08dc8f51f92?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1503602642458-232111445657?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1529408686214-b48b8532f72c?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1558941424-a602359379e4?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1571509594239-9bff986a1b2a?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1560185007-c5ca915a093d?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1594896993922-a7c175773121?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1534598382126-79c8386b89d8?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1550222286-a749b9b047a2?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1536532152940-0cce4a435431?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1501820589297-8c35c635a20e?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1579541621333-45fde8a8a4d8?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1506806732259-39c2d0268443?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1550684376-efcbd6e3f031?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1535350356005-fd52b3b524fb?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1516205651411-aef33a44f7c2?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1557683316-973673baf926?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1508615039623-a25605d2b022?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1533122250115-613288a48b6f?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1501696461415-6bd6a6a49c40?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1454117096348-e4abbeba002c?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1591348278463-88a2a276e1a3?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1588702547919-26089e690ecc?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1526657782461-9fe135058df2?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1585366119957-e22591c2e757?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1542280756-310153185784?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1575032617751-6ddec2089882?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1590845947670-c009801ffa74?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1598528738936-c50861cc75a9?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1543508282-6319a3e2621f?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1581338834647-b0fb40704e21?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1574647167659-c70b8a13d851?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1589992896387-14c53b137373?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1584208140373-8a3c393a53e2?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1566958769312-82cef41d1936?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1579065560486-f8b539594488?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1529339933691-39acff7d082d?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1539635278523-1629c42f382d?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1527719327859-c6ce80353573?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1492681290082-e932832941e6?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1504593811423-6dd665756598?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1554151228-14d9def656e4?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1589571894960-20bbe2828d0a?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1512314889357-e157c22f938d?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1534349762237-7202e6a8385c?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1562572159-4efc207f5aff?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1564485377539-4bf72d1f36a2?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1545167622-3a6ac756b47a?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1558556403-349e4d281cea?w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1560253334-a8b5b59837b5?w=800&auto=format&fit=crop',
-            ]
+            myPhotosUrls: [],
+            imageUrls: []
         },
 
-        init() {
+        async init() {
             this.cacheDOMElements();
             this.addEventListeners();
+            await this.fetchImageUrls();
             this.renderCategories();
             this.renderExploreFilters();
             this.updateView();
+        },
+        
+        async fetchImageUrls() {
+            this.elements.exploreLoader.classList.remove('hidden');
+            try {
+                const response = await fetch('https://raw.githubusercontent.com/HomebrewVR/GeminiSites/main/fake_images.txt');
+                if (!response.ok) throw new Error('Network response was not ok.');
+                const text = await response.text();
+                this.data.imageUrls = text.split('\n').map(url => url.trim()).filter(url => url.length > 0);
+            } catch (error) {
+                console.error("Failed to fetch images:", error);
+                this.showToast("Could not load images from source.", 'error');
+                this.data.imageUrls = []; 
+            } finally {
+                 this.elements.exploreLoader.classList.add('hidden');
+            }
         },
 
         cacheDOMElements() {
@@ -344,6 +233,9 @@
             this.elements.modalImgPreview = document.getElementById('modal-img-preview');
             this.elements.modalCategorySelect = document.getElementById('modal-item-category');
             this.elements.toastContainer = document.getElementById('toast-container');
+            this.elements.addMyPhotosBtn = document.getElementById('add-my-photos-btn');
+            this.elements.addUrlModalContainer = document.getElementById('add-url-modal-container');
+            this.elements.addUrlModal = document.getElementById('add-url-modal');
         },
 
         addEventListeners() {
@@ -404,10 +296,19 @@
                 if(e.target === this.elements.addToCollectionModal) this.closeAddToCollectionModal();
             });
 
+            this.elements.addMyPhotosBtn.addEventListener('click', () => this.openAddUrlModal());
+            document.getElementById('add-url-btn').addEventListener('click', () => this.handleAddUrls());
+            document.getElementById('add-url-cancel-btn').addEventListener('click', () => this.closeAddUrlModal());
+            this.elements.addUrlModalContainer.addEventListener('click', (e) => {
+                 if (e.target === this.elements.addUrlModalContainer) this.closeAddUrlModal();
+            });
+
+
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     if (!this.elements.detailsPanelContainer.classList.contains('hidden')) this.closeDetailsPanel();
                     if (!this.elements.addToCollectionModal.classList.contains('hidden')) this.closeAddToCollectionModal();
+                    if (!this.elements.addUrlModalContainer.classList.contains('hidden')) this.closeAddUrlModal();
                 }
             });
         },
@@ -416,9 +317,7 @@
             if (this.state.currentView === 'explore') {
                 this.elements.exploreView.classList.remove('hidden');
                 this.elements.collectionView.classList.add('hidden');
-                if (this.elements.exploreGrid.innerHTML.trim() === '') {
-                    this.renderExploreGrid();
-                }
+                this.renderExploreGrid();
             } else {
                 this.elements.exploreView.classList.add('hidden');
                 this.elements.collectionView.classList.remove('hidden');
@@ -447,16 +346,26 @@
         },
 
         renderExploreFilters() {
-            this.elements.exploreFilters.innerHTML = this.data.exploreFilters.map(filter => `
+            let filters = [...this.data.exploreFilters];
+            if (this.state.myPhotosAdded) {
+                filters.splice(1, 0, { name: 'My Photos', query: 'my-photos' });
+            }
+            this.elements.exploreFilters.innerHTML = filters.map(filter => `
                 <button data-query="${filter.query}" class="${this.state.activeExploreFilter === filter.query ? 'bg-gray-900 text-white' : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-100 hover:border-gray-300'} px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 shadow-sm">${filter.name}</button>
             `).join('');
         },
 
         renderExploreGrid() {
             this.elements.exploreGrid.innerHTML = '';
-            this.elements.exploreLoader.classList.remove('hidden');
             
-            const shuffledImages = [...this.data.imageUrls].sort(() => 0.5 - Math.random());
+            let sourceImages = this.state.activeExploreFilter === 'my-photos' ? this.data.myPhotosUrls : this.data.imageUrls;
+
+            if (sourceImages.length === 0 && this.state.activeExploreFilter === 'my-photos') {
+                this.elements.exploreGrid.innerHTML = `<p class="text-center text-gray-500 col-span-full">You haven't added any of your own photos yet. Click "Add My Photos" to get started.</p>`;
+                return;
+            }
+
+            const shuffledImages = [...sourceImages].sort(() => 0.5 - Math.random());
             const imagesToShow = shuffledImages.slice(0, 40);
 
             const fragment = document.createDocumentFragment();
@@ -476,7 +385,6 @@
             });
             
             this.elements.exploreGrid.appendChild(fragment);
-            this.elements.exploreLoader.classList.add('hidden');
         },
         
         renderCollectionGrid() {
@@ -548,9 +456,45 @@
             setTimeout(() => this.elements.detailsPanelContainer.classList.add('hidden'), 300);
         },
 
-        showToast(message) {
+        openAddUrlModal() {
+            this.elements.addUrlModalContainer.style.display = 'flex';
+            requestAnimationFrame(() => {
+                 this.elements.addUrlModal.classList.remove('translate-y-full');
+            });
+        },
+
+        closeAddUrlModal() {
+            this.elements.addUrlModal.classList.add('translate-y-full');
+            setTimeout(() => {
+                this.elements.addUrlModalContainer.style.display = 'none';
+            }, 300);
+        },
+        
+        handleAddUrls() {
+            const input = document.getElementById('photo-url-input');
+            const urls = input.value.split(/[\s,]+/).map(u => u.trim()).filter(Boolean);
+            if (urls.length === 0) {
+                this.showToast('Please paste at least one valid URL.', 'error');
+                return;
+            }
+            
+            this.data.myPhotosUrls.push(...urls);
+            this.state.myPhotosAdded = true;
+
+            this.closeAddUrlModal();
+            this.renderExploreFilters();
+            this.showToast(`${urls.length} photo(s) linked successfully!`);
+            
+            this.state.activeExploreFilter = 'my-photos';
+            this.renderExploreFilters();
+            this.renderExploreGrid();
+            input.value = '';
+        },
+
+        showToast(message, type = 'success') {
             const toast = document.createElement('div');
-            toast.className = 'toast bg-gray-900 text-white py-2 px-5 rounded-lg shadow-2xl opacity-0 transform translate-y-2';
+            const bgColor = type === 'error' ? 'bg-red-600' : 'bg-gray-900';
+            toast.className = `toast ${bgColor} text-white py-2 px-5 rounded-lg shadow-2xl opacity-0 transform translate-y-2`;
             toast.textContent = message;
             this.elements.toastContainer.appendChild(toast);
             
