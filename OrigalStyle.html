@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stylo - 2025 Trend Explorer</title>
+    <title>Original Stylo - 2025 Trend Explorer</title>
     <!-- Chosen Palette: Monochromatic & Accent Blue -->
     <!-- Application Structure Plan: The application is designed as a dual-mode SPA. The primary user flow starts in an "Explore" view, which immediately provides value by allowing users to discover 2025 trends from an external source (Unsplash). This encourages engagement without requiring prior user content. The secondary mode is the "My Collections" view, where users organize saved items into categories. Navigation between these modes is handled by a persistent sidebar. This structure was chosen to separate the acts of discovery and personal curation, creating a clear, task-oriented user journey that is more intuitive than a traditional, static report. -->
     <!-- Visualization & Content Choices: Report Info: 2025 Fashion & Design Trends (e.g., Soft Power, Aquatic Tones, Earthy Palettes, New Maximalism). Goal: Allow users to explore, understand, and personally categorize these abstract trends. Viz/Presentation: Interactive masonry image grids represent the core visualization method, making abstract trends tangible. Interaction: Users filter trends in the "Explore" view, click to add images to their personal "Collections" via a modal, and view details in a slide-out panel. Justification: This interactive model is superior to a static PDF report because it transforms passive reading into an active, personalized experience of style curation. Library/Method: Vanilla JS for logic, Tailwind CSS for styling. -->
@@ -31,7 +31,7 @@
 
         <aside id="sidebar" class="bg-white w-72 p-8 border-r border-gray-200 flex-shrink-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out z-30 flex flex-col">
             <div class="flex items-center justify-between mb-10 flex-shrink-0">
-                <h1 class="text-3xl font-extrabold text-gray-900">Stylo</h1>
+                <h1 class="text-3xl font-extrabold text-gray-900">Original Stylo</h1>
                 <button id="close-sidebar-btn" class="md:hidden text-gray-500 hover:text-gray-800"><i class="fas fa-times text-xl"></i></button>
             </div>
             <nav class="flex-grow overflow-y-auto -mr-4 pr-4">
@@ -63,7 +63,7 @@
                         <i class="fas fa-bell text-xl"></i>
                         <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
                     </button>
-                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="User Avatar" class="w-10 h-10 rounded-full border-2 border-white shadow-md">
+                    <img src="https://scontent-sjc3-1.xx.fbcdn.net/v/t39.30808-6/490988037_10235923891018858_3505439874219007880_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=L2UmglBcllEQ7kNvwFWQ7dv&_nc_oc=AdlCzj2tumG6AaRjWABh8jMqu-zsHoxbJW6sOUWGKDQVdSvtXRPyNSDhwUu7RkHRDe74W0t6Jtw9ly-sdj-fCbTR&_nc_zt=23&_nc_ht=scontent-sjc3-1.xx&_nc_gid=93qbgap_Bx7HV_o50KJ_eg&oh=00_AfTwEyGuK5v9vxtZHQi_ZcMzQqYM-twSxwNiDnLeokIWQQ&oe=6880E603" alt="User Avatar" class="w-10 h-10 rounded-full border-2 border-white shadow-md object-cover">
                 </div>
             </header>
 
@@ -145,7 +145,7 @@
         state: {
             currentView: 'explore',
             currentCategory: 'Fashion',
-            activeExploreFilter: 'fashion',
+            activeExploreFilter: 'all',
         },
         data: {
             collections: {
@@ -155,6 +155,7 @@
                 'Home Decor': [],
             },
             exploreFilters: [
+                { name: 'All', query: 'all' },
                 { name: 'Fashion 2025', query: 'fashion' },
                 { name: 'Soft Power', query: 'aesthetic' },
                 { name: 'Aquatic Tones', query: 'water' },
@@ -213,6 +214,106 @@
                 'https://images.unsplash.com/photo-1571086382535-23c399a955a8?w=800&auto=format&fit=crop',
                 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&auto=format&fit=crop',
                 'https://images.unsplash.com/photo-1540574163024-5735f6153dd4?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1521577352947-f1427ee9ee21?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1576091160550-42b09a7d1b37?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1542291026-7eec264c27ab?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1525966222134-fc3011011d32?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1562183241-b937e95585b6?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1577909673855-945695a2095b?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1543087904-7435a0b44454?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1603575395337-01c00a11404a?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1533853154859-3451b6847572?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1536520002442-6978a48ed634?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1513094735237-8f2714d57c13?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1588117265224-234d38a7b3bf?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1615873968403-89e068629265?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1537726235470-8504e3b77c06?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1554995207-c18c203602cb?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1583847268964-b08dc8f51f92?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1503602642458-232111445657?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1529408686214-b48b8532f72c?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1558941424-a602359379e4?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1571509594239-9bff986a1b2a?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1560185007-c5ca915a093d?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1594896993922-a7c175773121?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1534598382126-79c8386b89d8?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1550222286-a749b9b047a2?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1536532152940-0cce4a435431?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1501820589297-8c35c635a20e?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1579541621333-45fde8a8a4d8?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1506806732259-39c2d0268443?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1550684376-efcbd6e3f031?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1535350356005-fd52b3b524fb?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1516205651411-aef33a44f7c2?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1557683316-973673baf926?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1508615039623-a25605d2b022?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1533122250115-613288a48b6f?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1501696461415-6bd6a6a49c40?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1454117096348-e4abbeba002c?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1591348278463-88a2a276e1a3?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1588702547919-26089e690ecc?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1526657782461-9fe135058df2?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1585366119957-e22591c2e757?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1542280756-310153185784?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1575032617751-6ddec2089882?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1590845947670-c009801ffa74?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1598528738936-c50861cc75a9?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1543508282-6319a3e2621f?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1581338834647-b0fb40704e21?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1574647167659-c70b8a13d851?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1589992896387-14c53b137373?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1584208140373-8a3c393a53e2?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1566958769312-82cef41d1936?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1579065560486-f8b539594488?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1529339933691-39acff7d082d?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1539635278523-1629c42f382d?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1527719327859-c6ce80353573?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1492681290082-e932832941e6?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1504593811423-6dd665756598?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1554151228-14d9def656e4?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1589571894960-20bbe2828d0a?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1512314889357-e157c22f938d?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1534349762237-7202e6a8385c?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1562572159-4efc207f5aff?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1564485377539-4bf72d1f36a2?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1545167622-3a6ac756b47a?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1558556403-349e4d281cea?w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1560253334-a8b5b59837b5?w=800&auto=format&fit=crop',
             ]
         },
 
@@ -356,7 +457,7 @@
             this.elements.exploreLoader.classList.remove('hidden');
             
             const shuffledImages = [...this.data.imageUrls].sort(() => 0.5 - Math.random());
-            const imagesToShow = shuffledImages.slice(0, 20);
+            const imagesToShow = shuffledImages.slice(0, 40);
 
             const fragment = document.createDocumentFragment();
             imagesToShow.forEach(imgSrc => {
